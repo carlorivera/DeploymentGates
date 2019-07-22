@@ -58,8 +58,8 @@ POST
   "timeZoneId": "Eastern Standard Time",
    "validDaysOfWeek": [ 'Monday', 'Tuesday', 'Wednesday','Thursday','Friday' ],
   "startTimeSpan": "9:00",
-  "endTimeSpan": "5:00",
-  "invalidDates": ['1/1/2019', '12/25/2019']
+  "endTimeSpan": "17:00",
+  "invalidDates": ['1/1/2019', '12/24/2019',  '12/25/2019', '9/2/2019', '11/28/2019', '11/29/2019']
 }
 ````
 

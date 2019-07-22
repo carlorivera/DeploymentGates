@@ -68,7 +68,7 @@ namespace DeploymentGates
 
             return new OkObjectResult(new
             {
-                meetsCritria = isInsideTimeWindow && isValidDayOfWeek && isValidDate,
+                meetsCriteria = isInsideTimeWindow && isValidDayOfWeek && isValidDate,
                 isInsideTimeWindow,
                 isValidDayOfWeek,
                 isValidDate,

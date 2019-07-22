@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeploymentGates", "DeploymentGates\DeploymentGates.csproj", "{532E415B-B6E0-4FCE-9F29-A8A08E1D0BB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeploymentGates", "DeploymentGates\DeploymentGates.csproj", "{532E415B-B6E0-4FCE-9F29-A8A08E1D0BB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeploymentGates.UnitTests", "DeploymentGates.UnitTests\DeploymentGates.UnitTests.csproj", "{ECD29270-30B0-4C55-BDA8-77B3BB89554F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeploymentGates.UnitTests", "DeploymentGates.UnitTests\DeploymentGates.UnitTests.csproj", "{ECD29270-30B0-4C55-BDA8-77B3BB89554F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

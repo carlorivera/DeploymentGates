@@ -12,9 +12,9 @@ using System.Linq;
 
 namespace DeploymentGates
 {
-    public static class TimeOfDay
+    public static class IsValidDay
     {
-        [FunctionName("TimeOfDay")]
+        [FunctionName("IsValidDay")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
@@ -38,10 +38,13 @@ namespace DeploymentGates
             log.LogVariable("DateTime.UtcNow", DateTime.UtcNow);
             log.LogVariable(nameof(localTime), localTime);
 
-            // Return true if the current time is within the specified window
-            bool insideWindow = args.IsInsideWindow(localTime);
             bool isValidDayOfWeek = (args.ValidDaysOfWeek.Count() == 0 || args.IsValidDayOfWeek(localTime));
-            return new OkObjectResult(insideWindow && isValidDayOfWeek);
+            log.LogVariable(nameof(isValidDayOfWeek), isValidDayOfWeek);
+
+            bool isValidDate = args.IsValidDate(localTime);
+            log.LogVariable(nameof(isValidDate), isValidDate);
+
+            return new OkObjectResult(isValidDayOfWeek && isValidDate);
         }
     }
 }

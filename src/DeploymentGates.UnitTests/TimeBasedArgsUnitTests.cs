@@ -72,5 +72,36 @@ namespace DeploymentGates.UnitTests
             Assert.True(args.IsValidDayOfWeek(DateTime.Parse("7/23/2019 18:00:00Z")));
             Assert.False(args.IsValidDayOfWeek(DateTime.Parse("7/24/2019 18:00:00Z")));
         }
+
+
+        [Fact]
+        public void IsValidDate()
+        {
+            string json = @"
+{
+  'timeZoneId': 'Eastern Standard Time',
+  'validDaysOfWeek': [ 'Monday' ],
+  'invalidDates': [
+		'7/22/2019', '7/23/2019'
+	]
+}";
+            TimeBasedArgs args = TimeBasedArgs.FromJson(json);
+            Assert.Equal(DateTime.Parse("7/22/2019"), args.InvalidDates.First());
+            Assert.True(args.IsValidDate(DateTime.Parse("7/24/2019 18:00:00Z")));
+            Assert.False(args.IsValidDate(DateTime.Parse("7/22/2019 18:00:00Z")));
+        }
+
+        [Fact]
+        public void IsValidDate_0InvalidDates()
+        {
+            string json = @"
+{
+  'timeZoneId': 'Eastern Standard Time',
+  'validDaysOfWeek': [ 'Monday' ],
+  'invalidDates': []
+}";
+            TimeBasedArgs args = TimeBasedArgs.FromJson(json);
+            Assert.True(args.IsValidDate(DateTime.Parse("7/22/2019 18:00:00Z")));
+        }
     }
 }

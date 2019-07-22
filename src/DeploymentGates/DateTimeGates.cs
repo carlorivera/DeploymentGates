@@ -12,14 +12,32 @@ using System.Linq;
 
 namespace DeploymentGates
 {
-    public static class TimeOfDay
+    /*
+    Azure function that takes a body like
+     {
+      "timeZoneId": "Eastern Standard Time",
+      "startTimeSpan": "12:00",
+      "endTimeSpan": "17:00",
+      "validDaysOfWeek": [ 'Monday', 'Tuesday', 'Wednesday','Thursday','Friday' ],
+      "invalidDates": [
+		    '1/1/2019', '12/25/2019'
+	    ]
+    }
+
+    Using the specified timezones, it will 
+    - ensure the Time of day is between Start & End
+    - ensure the day of th week is withing (ValidDaysOfWeek)
+    - ensure it isn't an "Invalid Date'
+
+    */
+    public static class DateTimeGates
     {
-        [FunctionName("TimeOfDay")]
+        [FunctionName("DateTimeGates")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("TimeOfDay - C# HTTP trigger function processed a request.");
+            log.LogInformation("DateTimeGates - C# HTTP trigger function processed a request.");
 
             TimeBasedArgs args;
             try
@@ -38,10 +56,23 @@ namespace DeploymentGates
             log.LogVariable("DateTime.UtcNow", DateTime.UtcNow);
             log.LogVariable(nameof(localTime), localTime);
 
-            // Return true if the current time is within the specified window
+            // Determine if the datetime is valid.
             bool insideWindow = args.IsInsideWindow(localTime);
             bool isValidDayOfWeek = (args.ValidDaysOfWeek.Count() == 0 || args.IsValidDayOfWeek(localTime));
-            return new OkObjectResult(insideWindow && isValidDayOfWeek);
+            bool isValidDate = args.IsValidDate(localTime);
+
+            /// Log data
+            log.LogVariable(nameof(insideWindow), insideWindow);
+            log.LogVariable(nameof(isValidDayOfWeek), isValidDayOfWeek);
+            log.LogVariable(nameof(isValidDate), isValidDate);
+
+            return new OkObjectResult(new
+            {
+                meetsCritria = insideWindow && isValidDayOfWeek && isValidDate,
+                insideWindow,
+                isValidDayOfWeek,
+                isValidDate,
+            });
         }
     }
 }

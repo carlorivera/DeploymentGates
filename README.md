@@ -46,7 +46,7 @@ POST:
 POST
 {
   "timeZoneId": "Eastern Standard Time",
-  "invalidDates": ['1/1/2019', '12/25/2019']
+  "invalidDates": ['1/1/2019', '12/24/2019',  '12/25/2019', '9/2/2019', '11/28/2019', '11/29/2019']
 }
 ````
 

@@ -31,6 +31,11 @@ namespace DeploymentGates.Models
 
         public bool IsInsideWindow(DateTime dateTime)
         {
+            if (this.StartTimeSpan == default(TimeSpan) && this.EndTimeSpan == default(TimeSpan))
+            {
+                return true;
+            }
+
             TimeSpan time = dateTime.TimeOfDay;
             return ((time > this.StartTimeSpan) && (time < this.EndTimeSpan));
         }

@@ -34,7 +34,7 @@ namespace DeploymentGates
     {
         [FunctionName("DateTimeGates")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("DateTimeGates - C# HTTP trigger function processed a request.");
@@ -57,19 +57,19 @@ namespace DeploymentGates
             log.LogVariable(nameof(localTime), localTime);
 
             // Determine if the datetime is valid.
-            bool insideWindow = args.IsInsideWindow(localTime);
+            bool isInsideTimeWindow = args.IsInsideWindow(localTime);
             bool isValidDayOfWeek = (args.ValidDaysOfWeek.Count() == 0 || args.IsValidDayOfWeek(localTime));
             bool isValidDate = args.IsValidDate(localTime);
 
             /// Log data
-            log.LogVariable(nameof(insideWindow), insideWindow);
+            log.LogVariable(nameof(isInsideTimeWindow), isInsideTimeWindow);
             log.LogVariable(nameof(isValidDayOfWeek), isValidDayOfWeek);
             log.LogVariable(nameof(isValidDate), isValidDate);
 
             return new OkObjectResult(new
             {
-                meetsCritria = insideWindow && isValidDayOfWeek && isValidDate,
-                insideWindow,
+                meetsCritria = isInsideTimeWindow && isValidDayOfWeek && isValidDate,
+                isInsideTimeWindow,
                 isValidDayOfWeek,
                 isValidDate,
             });

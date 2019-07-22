@@ -59,6 +59,17 @@ namespace DeploymentGates.UnitTests
         }
 
         [Fact]
+        public void TimeBasedArgs_IsInWindow_MissngFromJson()
+        {
+            string json = @"
+{
+  'timeZoneId': 'Eastern Standard Time'
+}";
+            TimeBasedArgs args = TimeBasedArgs.FromJson(json);
+            Assert.True(args.IsInsideWindow(DateTime.Parse("7/22/2019 18:00:00Z")));
+        }
+
+        [Fact]
         public void TimeBasedArgs_IsValidDayOfWeek()
         {
             string json = @"

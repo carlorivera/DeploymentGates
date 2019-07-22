@@ -35,7 +35,7 @@ POST:
 POST:
 {
   "startTimeSpan": "9:00",
-  "endTimeSpan": "5:00",
+  "endTimeSpan": "17:00",
   "timeZoneId": "Eastern Standard Time"
 }
 ````

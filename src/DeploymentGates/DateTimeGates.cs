@@ -6,7 +6,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using DeploymentGates.Models;
 using System.Linq;
 
@@ -58,7 +57,7 @@ namespace DeploymentGates
 
             // Determine if the datetime is valid.
             bool isInsideTimeWindow = args.IsInsideWindow(localTime);
-            bool isValidDayOfWeek = (args.ValidDaysOfWeek.Count() == 0 || args.IsValidDayOfWeek(localTime));
+            bool isValidDayOfWeek = !args.ValidDaysOfWeek.Any() || args.IsValidDayOfWeek(localTime);
             bool isValidDate = args.IsValidDate(localTime);
 
             /// Log data

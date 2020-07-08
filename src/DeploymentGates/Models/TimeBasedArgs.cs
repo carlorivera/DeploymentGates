@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DeploymentGates.Models
 {
@@ -26,23 +26,39 @@ namespace DeploymentGates.Models
         public static TimeBasedArgs FromJson(string json)
         {
             // Parse JSON to object
-            return JsonConvert.DeserializeObject<TimeBasedArgs>(json);
+            return ResolveInvalidDates(JsonConvert.DeserializeObject<TimeBasedArgs>(json));
+        }
+
+        private static TimeBasedArgs ResolveInvalidDates(TimeBasedArgs args)
+        {
+            var newInvalidDates = new List<DateTime>();
+            if (args.InvalidDates == null || !args.InvalidDates.Any()) return args;
+
+            foreach (var invalidDate in args.InvalidDates)
+            {
+                newInvalidDates.Add(invalidDate.Year.Equals(9999)
+                    ? new DateTime(DateTime.UtcNow.Year, invalidDate.Month, invalidDate.Day)
+                    : invalidDate);
+            }
+            
+            args.InvalidDates = newInvalidDates;
+            return args;
         }
 
         public bool IsInsideWindow(DateTime dateTime)
         {
-            if (this.StartTimeSpan == default(TimeSpan) && this.EndTimeSpan == default(TimeSpan))
+            if (StartTimeSpan == default && EndTimeSpan == default)
             {
                 return true;
             }
 
             TimeSpan time = dateTime.TimeOfDay;
-            return ((time > this.StartTimeSpan) && (time < this.EndTimeSpan));
+            return time > StartTimeSpan && time < EndTimeSpan;
         }
 
         public bool IsValidDayOfWeek(DateTime dateTime)
         {
-           return this.ValidDaysOfWeek.Contains(dateTime.DayOfWeek);
+           return ValidDaysOfWeek.Contains(dateTime.DayOfWeek);
         }
 
         /// <summary>
@@ -50,7 +66,7 @@ namespace DeploymentGates.Models
         /// </summary>
         public bool IsValidDate(DateTime dateTime)
         {
-            return !this.InvalidDates.Contains(dateTime.Date);
+            return !InvalidDates.Contains(dateTime.Date);
         }
 
         public override string ToString()

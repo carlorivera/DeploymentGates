@@ -50,11 +50,11 @@ namespace DeploymentGates.UnitTests
             string json = @"
 {
   'startTimeSpan': '12:30',
-  'endTimeSpan': '17:00',
-  'timeZoneId': 'Eastern Standard Time'
+  'endTimeSpan': '19:00',
+  'timeZoneId': 'UTC'
 }";
             TimeBasedArgs args = TimeBasedArgs.FromJson(json);
-            Assert.True(args.IsInsideWindow(DateTime.Parse("7/22/2019 18:00:00Z")));
+            Assert.True(args.IsInsideWindow(DateTime.Parse("7/22/2019 17:59:00Z")));
             Assert.False(args.IsInsideWindow(DateTime.Parse("7/22/2019 1:00:00Z")));
         }
 
@@ -113,6 +113,32 @@ namespace DeploymentGates.UnitTests
 }";
             TimeBasedArgs args = TimeBasedArgs.FromJson(json);
             Assert.True(args.IsValidDate(DateTime.Parse("7/22/2019 18:00:00Z")));
+        }
+
+        [Fact]
+        public void IsValidDate_ParcialInvalidDates()
+        {
+            string json = @"
+{
+  'timeZoneId': 'Eastern Standard Time',
+  'validDaysOfWeek': [ 'Monday' ],
+  'invalidDates': [
+		'7/22/9999', '7/23/9999'
+	]
+}";
+            TimeBasedArgs args = TimeBasedArgs.FromJson(json);
+
+
+            int currentYear = DateTime.UtcNow.Year;
+            int previousYear = DateTime.UtcNow.Year - 1;
+
+            Assert.True(args.IsValidDate(DateTime.Parse($"7/24/{previousYear} 18:00:00Z")));
+            Assert.True(args.IsValidDate(DateTime.Parse($"7/24/{currentYear} 18:00:00Z")));
+
+            Assert.True(args.IsValidDate(DateTime.Parse($"7/22/{previousYear} 18:00:00Z")));
+            Assert.False(args.IsValidDate(DateTime.Parse($"7/22/{currentYear} 18:00:00Z")));
+            Assert.True(args.IsValidDate(DateTime.Parse($"7/23/{previousYear} 18:00:00Z")));
+            Assert.False(args.IsValidDate(DateTime.Parse($"7/23/{currentYear} 18:00:00Z")));
         }
     }
 }
